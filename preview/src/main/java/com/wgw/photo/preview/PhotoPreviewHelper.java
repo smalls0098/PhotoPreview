@@ -23,6 +23,7 @@ import android.widget.ImageView;
 import android.widget.ImageView.ScaleType;
 
 import com.wgw.photo.preview.ImagePagerAdapter.ViewHolder;
+import com.wgw.photo.preview.interfaces.IViewHolder;
 import com.wgw.photo.preview.util.MatrixUtils;
 
 import java.util.ArrayList;
@@ -646,6 +647,11 @@ class PhotoPreviewHelper {
         ViewHolder viewHolder = (ViewHolder) tag;
         PhotoView photoView = viewHolder.getPhotoView();
         viewHolder.getLoading().setVisibility(View.GONE);
+
+        IViewHolder ivh = mShareData.config.viewHolder;
+        if (ivh != null) {
+            ivh.destroy();
+        }
         
         if (photoView.getDrawable() == null) {
             callOnExit(ANIM_START_PRE, ANIM_START);

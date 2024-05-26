@@ -2,6 +2,7 @@ package com.wgw.photo.preview;
 
 import android.graphics.drawable.Drawable;
 
+import com.wgw.photo.preview.interfaces.IViewHolder;
 import com.wgw.photo.preview.interfaces.ImageLoader;
 import com.wgw.photo.preview.interfaces.OnDismissListener;
 import com.wgw.photo.preview.interfaces.OnLongClickListener;
@@ -19,6 +20,8 @@ import androidx.viewpager.widget.ViewPager.OnPageChangeListener;
 public class Config {
     @Nullable
     public ImageLoader imageLoader;
+    @Nullable
+    public IViewHolder viewHolder;
     public int indicatorType = IndicatorType.DOT;
     public int maxIndicatorDot = 9;
     public int selectIndicatorColor = 0xFFFFFFFF/*白色*/;
@@ -76,8 +79,9 @@ public class Config {
         if (config == null) {
             return;
         }
-        
+
         this.imageLoader = config.imageLoader;
+        this.viewHolder = config.viewHolder;
         this.indicatorType = config.indicatorType;
         this.maxIndicatorDot = config.maxIndicatorDot;
         this.selectIndicatorColor = config.selectIndicatorColor;

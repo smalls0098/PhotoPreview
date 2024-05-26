@@ -24,7 +24,7 @@ import com.github.chrisbanes.photoview.custom.PhotoViewAttacher;
  *
  * @author Created by wanggaowan on 11/19/20 11:23 PM
  */
-class PhotoView extends com.github.chrisbanes.photoview.custom.PhotoView implements OnScaleChangedListener, OnViewDragListener {
+public class PhotoView extends com.github.chrisbanes.photoview.custom.PhotoView implements OnScaleChangedListener, OnViewDragListener {
     
     private static final int RESET_ANIM_TIME = 100;
     

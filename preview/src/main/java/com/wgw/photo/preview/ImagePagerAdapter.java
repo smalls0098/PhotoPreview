@@ -12,12 +12,14 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 
 import com.wgw.photo.preview.PhotoPreviewHelper.OnOpenListener;
+import com.wgw.photo.preview.interfaces.IViewHolder;
 import com.wgw.photo.preview.interfaces.OnImageLongClickListener;
 import com.wgw.photo.preview.interfaces.OnLongClickListener;
 
 import java.util.List;
 
 import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.PagerAdapter;
 
 /**
@@ -58,7 +60,7 @@ class ImagePagerAdapter extends PagerAdapter {
         holder.destroy();
         container.removeView(holder.root);
     }
-    
+
     @Override
     public int getItemPosition(@NonNull Object object) {
         if (getCount() == 0) {
@@ -67,12 +69,13 @@ class ImagePagerAdapter extends PagerAdapter {
         
         return POSITION_UNCHANGED;
     }
-    
+
     static class ViewHolder {
         View root;
+
         private final PhotoView photoView;
         private final ProgressBar loading;
-        
+
         private final PhotoPreviewHelper helper;
         private final ShareData shareData;
         // 记录预览界面图片缩放倍率为1时图片真实绘制大小
@@ -84,14 +87,32 @@ class ImagePagerAdapter extends PagerAdapter {
         public ViewHolder(PhotoPreviewHelper helper, ShareData shareData, ViewGroup container, int position) {
             this.helper = helper;
             this.shareData = shareData;
-            
-            root = LayoutInflater.from(container.getContext()).inflate(R.layout.fragment_preview, container, false);
+
+            IViewHolder ivh = shareData.config.viewHolder;
+
+            int layout = R.layout.fragment_preview;
+            if (ivh != null) {
+                int id = ivh.getLayoutId();
+                if (id != 0) {
+                    layout = id;
+                }
+            }
+            root = LayoutInflater.from(container.getContext()).inflate(layout, container, false);
+
             container.addView(root);
             root.setTag(position);
             root.setTag(R.id.view_holder, this);
-            
-            photoView = root.findViewById(R.id.photoView);
-            loading = root.findViewById(R.id.loading);
+
+            PhotoView photoView = root.findViewById(R.id.photoView);
+            ProgressBar loading = root.findViewById(R.id.loading);
+
+            if (photoView == null || loading == null) {
+                throw new IllegalArgumentException("R.id.photoView must PhotoView or R.id.loading must ProgressBar");
+            }
+
+            this.photoView = photoView;
+            this.loading = loading;
+
             setPhotoViewVisibility();
             
             photoView.setPhotoPreviewHelper(helper);
@@ -99,6 +120,14 @@ class ImagePagerAdapter extends PagerAdapter {
             List<?> sources = shareData.config.sources;
             int size = sources == null ? 0 : sources.size();
             photoView.setEndView(position == size - 1);
+
+            if (ivh != null) {
+                if (sources != null && sources.size() > position) {
+                    ivh.bindData(root, sources.get(position), position);
+                } else {
+                    ivh.bindData(root, null, position);
+                }
+            }
             
             initEvent(position);
             initLoading();

@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.ImageView;
 
 import com.wgw.photo.preview.interfaces.IFindThumbnailView;
+import com.wgw.photo.preview.interfaces.IViewHolder;
 import com.wgw.photo.preview.interfaces.ImageLoader;
 import com.wgw.photo.preview.interfaces.OnDismissListener;
 import com.wgw.photo.preview.interfaces.OnLongClickListener;
@@ -487,6 +488,14 @@ public class PhotoPreview {
          */
         public Builder imageLoader(ImageLoader imageLoader) {
             mConfig.imageLoader = imageLoader;
+            return this;
+        }
+
+        /**
+         * 视图持有者
+         */
+        public Builder viewHolder(IViewHolder viewHolder) {
+            mConfig.viewHolder = viewHolder;
             return this;
         }
         
